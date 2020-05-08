@@ -35,6 +35,12 @@ from tensorflow.core.protobuf import rewriter_config_pb2
 from tensorflow.python.estimator import estimator
 # pylint: enable=g-direct-tensorflow-import
 
+import debugpy
+debugpy.listen(5678)
+print("Waiting for debugger attach")
+debugpy.wait_for_client()
+
+
 FLAGS = flags.FLAGS
 
 FAKE_DATA_DIR = 'gs://cloud-tpu-test-datasets/fake_imagenet'
@@ -583,7 +589,7 @@ def export(est, export_dir, input_image_size=None):
     input_image_size = FLAGS.input_image_size
   is_cond_conv = FLAGS.model_name.startswith('efficientnet-condconv')
   batch_size = 1 if is_cond_conv else None  # Use fixed batch size for condconv.
-
+  debugpy.breakpoint()
   logging.info('Starting to export model.')
   if (FLAGS.model_name.startswith('efficientnet-lite') or
       FLAGS.model_name.startswith('efficientnet-edgetpu')):
@@ -595,7 +601,8 @@ def export(est, export_dir, input_image_size=None):
       input_image_size, batch_size=batch_size, resize_method=resize_method)
   est.export_saved_model(
       export_dir_base=export_dir,
-      serving_input_receiver_fn=image_serving_input_fn)
+      serving_input_receiver_fn=image_serving_input_fn,
+      experimental_mode=ModeKeys.TRAIN)
 
 
 def main(unused_argv):
@@ -786,6 +793,7 @@ def main(unused_argv):
       elapsed_time = int(time.time() - start_timestamp)
       logging.info('Finished training up to step %d. Elapsed seconds %d.',
                    FLAGS.train_steps, elapsed_time)
+  breakpoint()
   if FLAGS.export_dir:
     export(est, FLAGS.export_dir, input_image_size)
 
