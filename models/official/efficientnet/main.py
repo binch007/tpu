@@ -793,7 +793,7 @@ def main(unused_argv):
       elapsed_time = int(time.time() - start_timestamp)
       logging.info('Finished training up to step %d. Elapsed seconds %d.',
                    FLAGS.train_steps, elapsed_time)
-  breakpoint()
+  debugpy.breakpoint()
   if FLAGS.export_dir:
     export(est, FLAGS.export_dir, input_image_size)
 
