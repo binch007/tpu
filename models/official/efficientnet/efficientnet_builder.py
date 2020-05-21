@@ -281,7 +281,23 @@ def build_model(images,
         f.write('blocks_args= %s\n\n' % str(blocks_args))
 
   with tf.variable_scope(model_name):
+    # MEMO: EfficientNet Model (Keras) 생성 
     model = efficientnet_model.Model(blocks_args, global_params)
+
+
+    ckpt_path = '/models/test'
+    old_checkpoint = tf.train.latest_checkpoint(ckpt_path)
+    model.load_weights(old_checkpoint)
+    # def get_var_under_head(ckpt_path):
+    #   variables = tf.train.list_variables(ckpt_path)
+    #   return [variables[i] for i in range(len(variables)) if not 'head' in variables[i][0]]
+    # var_list_under_head = get_var_under_head(ckpt_path)
+    # saver = tf.compat.v1.train.Saver(var_list=var_list_under_head)
+    # sess = tf.compat.v1.Session()
+    # sess.run(tf.compat.v1.global_variables_initializer())
+    # saver.restore(sess, old_checkpoint)
+
+
     outputs = model(
         images,
         training=training,
