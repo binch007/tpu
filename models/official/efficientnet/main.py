@@ -36,13 +36,15 @@ from tensorflow.python.estimator import estimator
 # pylint: enable=g-direct-tensorflow-import
 
 # import debugpy
-# debugpy.listen(5678)
+# debugpy.listen(('localhost',5677))
 # print("Waiting for debugger attach")
 # debugpy.wait_for_client()
 
-import ptvsd
-ptvsd.enable_attach()
-ptvsd.wait_for_attach()
+# import ptvsd
+# ptvsd.enable_attach(address=('127.0.0.1',5677))
+# print("Waiting for debugger attach")
+# ptvsd.wait_for_attach()
+# breakpoint()
 
 gpus = tf.config.experimental.list_physical_devices('GPU')
 if gpus:
@@ -362,6 +364,16 @@ def model_fn(features, labels, mode, params):
       logits = tf.cast(build_model(), tf.float32)
   else:
     logits = build_model()
+
+
+
+  # def restore_model(ckpt_dir):
+  #   with tf.Session() as sess:
+  #     sess.run(tf.global_variables_initializer())
+  #     checkpoint = tf.train.latest_checkpoint(ckpt_dir)
+  #     print(tf.trainable_variables() + tf.get_collection('moving_vars'))
+
+  # restore_model(FLAGS.model_dir)
 
   if mode == tf.estimator.ModeKeys.PREDICT:
     predictions = {
