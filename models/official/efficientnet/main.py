@@ -36,15 +36,15 @@ from tensorflow.python.estimator import estimator
 # pylint: enable=g-direct-tensorflow-import
 
 # import debugpy
-# debugpy.listen(('localhost',5677))
+# debugpy.listen(('localhost',5678))
 # print("Waiting for debugger attach")
 # debugpy.wait_for_client()
 
-# import ptvsd
-# ptvsd.enable_attach(address=('127.0.0.1',5677))
-# print("Waiting for debugger attach")
-# ptvsd.wait_for_attach()
-# breakpoint()
+import ptvsd
+ptvsd.enable_attach(address=('0.0.0.0',5677))
+print("Waiting for debugger attach")
+ptvsd.wait_for_attach()
+
 
 gpus = tf.config.experimental.list_physical_devices('GPU')
 if gpus:
@@ -101,6 +101,10 @@ flags.DEFINE_string(
 flags.DEFINE_string(
     'mode', default='train_and_eval',
     help='One of {"train_and_eval", "train", "eval"}.')
+
+flags.DEFINE_bool(
+    'fine_tuning', default=False,
+    help=('Whether it would be fine-tuned'))
 
 flags.DEFINE_string(
     'augment_name', default=None,
@@ -356,6 +360,7 @@ def model_fn(features, labels, mode, params):
         model_name=FLAGS.model_name,
         training=is_training,
         override_params=override_params,
+        fine_tuning=FLAGS.fine_tuning,
         model_dir=FLAGS.model_dir)
     return logits
 
@@ -365,6 +370,10 @@ def model_fn(features, labels, mode, params):
   else:
     logits = build_model()
 
+  # CKPT = '/models/test/model.ckpt'
+  # ckpt_reader = tf.train.load_checkpoint(CKPT)
+  # variables = tf.train.list_variables(CKPT)
+  # variables_wo_head = [variables[i] for i in range(len(variables)) if not 'head' in variables[i][0]]
 
 
   # def restore_model(ckpt_dir):
