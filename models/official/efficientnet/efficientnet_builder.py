@@ -284,33 +284,6 @@ def build_model(images,
     # MEMO: EfficientNet Model (Keras) 생성 
     model = efficientnet_model.Model(blocks_args, global_params)
 
-
-    # ckpt_path = '/models/test'
-    # old_checkpoint = tf.train.latest_checkpoint(ckpt_path)
-
-
-    # def restore_model(ckpt_dir):
-    #     with tf.Session() as sess:
-    #       sess.run(tf.global_variables_initializer())
-    #       checkpoint = tf.train.latest_checkpoint(ckpt_dir)
-    #       var_dict = list(set(tf.trainable_variables() + tf.get_collection('moving_vars')))
-    #       print(var_dict)
-    #       saver = tf.train.Saver(var_dict, max_to_keep=1)
-    #       saver.restore(sess, checkpoint)
-
-    # restore_model(ckpt_path)
-    # def get_var_under_head(ckpt_path):
-    #   variables = tf.train.list_variables(ckpt_path)
-    #   return [variables[i] for i in range(len(variables)) if not 'head' in variables[i][0]]
-    # var_list_under_head = get_var_under_head(ckpt_path)
-    # var_list = [var_list_under_head[i][0] for i in range(len(var_list_under_head))]
-    # saver = tf.compat.v1.train.Saver(var_list=var_list)
-    # sess = tf.compat.v1.Session()
-    # sess.run(tf.compat.v1.global_variables_initializer())
-    # saver.restore(sess, old_checkpoint)
-    # print("\n\n\nrestored\n\n\n")
-
-
     outputs = model(
         images,
         training=training,

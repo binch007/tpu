@@ -32,6 +32,11 @@ import model_builder_factory
 import preprocessing
 import utils
 
+import ptvsd
+ptvsd.enable_attach(address=('0.0.0.0',5677))
+print("Waiting for debugger attach")
+ptvsd.wait_for_attach()
+
 flags.DEFINE_string('model_name', 'efficientnet-b0', 'Model name to eval.')
 flags.DEFINE_string('runmode', 'examples', 'Running mode: examples or imagenet')
 flags.DEFINE_string(
@@ -100,6 +105,7 @@ FLAGS = flags.FLAGS
 
 
 def main(unused_argv):
+  breakpoint()
   logging.set_verbosity(logging.ERROR)
   driver = get_eval_driver(FLAGS.model_name, FLAGS.include_background_label,
                            FLAGS.advprop_preprocessing)
