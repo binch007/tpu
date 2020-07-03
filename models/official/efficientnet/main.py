@@ -799,6 +799,7 @@ def main(unused_argv):
 
     else:
       assert FLAGS.mode == 'train_and_eval'
+      breakpoint()
       while current_step < FLAGS.train_steps:
         # Train for up to steps_per_eval number of steps.
         # At the end of training, a checkpoint will be written to --model_dir.
